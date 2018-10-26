@@ -17,7 +17,7 @@ sd.default.channels= 2
 duration = 5 #segundos
 
 def modulaAM(sinal):
-    x, porter = chama.generateSin(12000,80,duration,fs)
+    x, porter = chama.generateSin(12000,50,duration,fs)
     mList = []
     
     for i in range(0,len(x)):
@@ -27,6 +27,18 @@ def modulaAM(sinal):
     sf.write("receiveds.wav",mList,fs)
     sf.write("received.wav",mList,fs)
     return(mList)
+
+def butter_highpass(cutoff, fs, order=5):
+    nyq = 0.5 * fs
+    normal_cutoff = cutoff / nyq
+    b, a = sp.signal.butter(order, normal_cutoff, btype='high', analog=False)
+    return b, a
+
+def butter_highpass_filter(data, cutoff, fs, order=5):
+    b, a = butter_highpass(cutoff, fs, order=order)
+    y = sp.signal.filtfilt(b, a, data)
+    return y
+
 
 def prints(original,normalizado,filtrado,modulado):
     fig = plt.figure()
@@ -44,6 +56,13 @@ def prints(original,normalizado,filtrado,modulado):
     plt.plot(modulado)
     plt.title("Modulado")
     timers.start()
+    plt.show()
+
+
+    plt.plot(modulado)
+    plt.plot(original)
+    plt.title("Modulado x Original")
+    plt.legend(["Modulado","Original"])
     plt.show()
 
 def butter_lowpass(cutoff, fs, order=5):
@@ -72,9 +91,9 @@ def importa_e_converte(nomeArquivo):
     arquivo,fs = sf.read(nomeArquivo)
     preparedSound = arquivo.T[0]
     normalizedSound = preparedSound/np.linalg.norm(preparedSound)
-    cutoff_hz = 2000.0
     print("PREPARA")
-    filteredSound = butter_lowpass_filter(normalizedSound,cutoff_hz,fs)
+    filteredSound1 = butter_highpass_filter(normalizedSound,1000,fs)
+    filteredSound = butter_lowpass_filter(filteredSound1,4000,fs)
     modulatedSound = modulaAM(filteredSound)
     print("VAI")
     sd.play(modulatedSound,fs)    
@@ -82,5 +101,5 @@ def importa_e_converte(nomeArquivo):
     prints(preparedSound,normalizedSound,filteredSound,modulatedSound)
 
 
-#grava_e_salva()
+grava_e_salva()
 importa_e_converte("myrecording.wav")

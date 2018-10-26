@@ -37,7 +37,7 @@ def recebe_e_grava() :
 
 
 def desmodula():
-    x, porter = chama.generateSin(12000,80,duration,fs)
+    x, porter = chama.generateSin(12000,50,duration,fs)
     myrecording1 = sf.read("received.wav")
     myrecording = np.transpose(myrecording1)
     plt.plot(myrecording1[0])
