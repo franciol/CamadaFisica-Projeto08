@@ -17,7 +17,7 @@ sd.default.channels= 2
 duration = 5 #segundos
 
 def modulaAM(sinal):
-    x, porter = chama.generateSin(12000,50,duration,fs)
+    x, porter = chama.generateSin(200000,50,duration,fs)
     mList = []
     
     for i in range(0,len(x)):
@@ -101,5 +101,5 @@ def importa_e_converte(nomeArquivo):
     prints(preparedSound,normalizedSound,filteredSound,modulatedSound)
 
 
-grava_e_salva()
+#grava_e_salva()
 importa_e_converte("myrecording.wav")
