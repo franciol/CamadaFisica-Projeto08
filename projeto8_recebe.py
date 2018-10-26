@@ -32,30 +32,37 @@ def recebe_e_grava() :
     myrecording = sd.rec(int(duration*fs),channels=2)
     sd.wait()
     sf.write("received.wav",myrecording,fs)
-    sd.play(myrecording,fs)
-    sd.wait()
+    desmodula(myrecording)
    
 
 
 
-def desmodula():
+def desmodula(myrecording):
     x, porter = chama.generateSin(200000,50,duration,fs)
-    myrecording1 = sf.read("received.wav")
-    myrecording = np.transpose(myrecording1)
-    plt.plot(myrecording1[0])
-    plt.show()
+  
 
     mList = []
     for i in range(0,len(x)):
-        s = porter[i]*myrecording[0][i]
+        s = porter[i]*myrecording.T[0][i]
         mList.append(s)
     
-    cutoff_hz = 14000
+    cutoff_hz = 20000
     filteredSound = butter_lowpass_filter(mList,cutoff_hz,fs)
     
     sd.play(filteredSound)
     sd.wait()
 
-  
+    plt.plot(myrecording.T[0])
+    plt.title("Original")
+    plt.figure()
+    plt.plot(filteredSound)
+    plt.title("Desmodulado")
+    plt.show()
+
+    chama.plotFFT(myrecording.T[0],fs)
+    chama.plotFFT(filteredSound,fs)
+    plt.show()
+    #plt.plot(fourOr)
+
+
 recebe_e_grava()
-desmodula()

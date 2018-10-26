@@ -92,7 +92,7 @@ def importa_e_converte(nomeArquivo):
     preparedSound = arquivo.T[0]
     normalizedSound = preparedSound/np.linalg.norm(preparedSound)
     print("PREPARA")
-    filteredSound1 = butter_highpass_filter(normalizedSound,1000,fs)
+    filteredSound1 = butter_highpass_filter(preparedSound,1000,fs)
     filteredSound = butter_lowpass_filter(filteredSound1,4000,fs)
     modulatedSound = modulaAM(filteredSound)
     print("VAI")
